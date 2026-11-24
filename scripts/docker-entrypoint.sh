@@ -41,7 +41,9 @@ npx prisma generate
 
 # Seed database on first deploy (only if no users exist)
 echo "[CRM] Seeding database with sample data and default admin..."
-npx prisma db seed || echo "[CRM] Warning: Seed may have failed, but continuing..."
+cd "$SERVER_DIR"
+npx ts-node prisma/seed.ts || echo "[CRM] Warning: Seed may have failed, but continuing..."
+cd /app
 
 # Start the app
 echo "[CRM] Starting application..."
