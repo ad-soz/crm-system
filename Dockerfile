@@ -46,7 +46,6 @@ COPY server/prisma ./server/prisma
 
 # Copy built artifacts from builder
 COPY --from=builder /app/server/dist ./server/dist
-COPY --from=builder /app/server/node_modules/.prisma ./server/node_modules/.prisma
 COPY --from=builder /app/client/dist ./client/dist
 
 # Copy startup script
