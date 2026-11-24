@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer, OnApplicationBootstrap } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { PrismaModule } from './prisma/prisma.module';
@@ -20,6 +20,8 @@ import { BackupsModule } from './backups/backups.module';
 import { ReportsModule } from './reports/reports.module';
 import { AuditModule } from './audit/audit.module';
 import { AnalyseModule } from './analyse/analyse.module';
+import { InitModule } from './init/init.module';
+import { InitService } from './init/init.service';
 import { crmEnvFile } from './config/local-paths';
 
 @Module({
@@ -46,8 +48,21 @@ import { crmEnvFile } from './config/local-paths';
     BackupsModule,
     ReportsModule,
     AnalyseModule,
+    InitModule,
   ],
   controllers: [AppController],
   providers: [],
 })
-export class AppModule {}
+export class AppModule implements OnApplicationBootstrap {
+  constructor(private initService: InitService) {}
+
+  async onApplicationBootstrap() {
+    console.log('[App] Running initialization...');
+    try {
+      const result = await this.initService.ensureDefaultAdmin();
+      console.log('[App] Init result:', result);
+    } catch (err) {
+      console.error('[App] Init failed:', err);
+    }
+  }
+}
