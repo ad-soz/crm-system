@@ -18,7 +18,7 @@ COPY server/prisma ./server/prisma
 RUN npm ci
 
 # Generate Prisma client BEFORE build (TypeScript needs the types)
-RUN npm run prisma -- generate -w server
+RUN cd server && npx prisma generate && cd ..
 
 # Build both server and client
 RUN npm run build
