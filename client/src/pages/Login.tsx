@@ -124,14 +124,9 @@ export default function Login() {
           </form>
           <div className="mt-4 space-y-2 text-center text-sm">
             <p className="text-muted-foreground">No account? Ask your administrator to invite you.</p>
-            <div className="flex gap-2 justify-center">
-              <Button variant="link" className="text-xs" onClick={() => setResetOpen(true)}>
-                Forgot password?
-              </Button>
-              <Button variant="link" className="text-xs" onClick={onCreateUsers}>
-                Create demo users
-              </Button>
-            </div>
+            <Button variant="link" className="text-xs" onClick={() => setResetOpen(true)}>
+              Forgot password?
+            </Button>
           </div>
         </CardContent>
       </Card>

@@ -23,6 +23,7 @@ import { UsersSection } from '@/components/users/UsersSection';
 import { RoleProfilesSection } from '@/components/users/RoleProfilesSection';
 import { BackupsSection } from '@/components/backups/BackupsSection';
 import { AuditSection } from '@/components/audit/AuditSection';
+import { TestDataSection } from '@/components/settings/TestDataSection';
 import ReferenceData from '@/pages/ReferenceData';
 import DataModel from '@/pages/DataModel';
 import Account from '@/pages/Account';
@@ -72,6 +73,7 @@ function App() {
                   <Route path="backups" element={<RequirePermission permission="backups.manage"><BackupsSection /></RequirePermission>} />
                   <Route path="audit" element={<RequirePermission permission="audit.view"><AuditSection /></RequirePermission>} />
                   <Route path="data-model" element={<RequirePermission permission="datamodel.view"><DataModel /></RequirePermission>} />
+                  <Route path="test-data" element={<RequirePermission permission="users.manage"><TestDataSection /></RequirePermission>} />
                   <Route path="*" element={<Navigate to="profile" replace />} />
                 </Route>
                 {/* Appearance now lives in Settings; keep old links working. */}
