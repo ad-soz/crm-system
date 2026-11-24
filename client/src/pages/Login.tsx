@@ -9,14 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+import { Dialog } from '@/components/ui/dialog';
 
 const loginSchema = z.object({
   email: z.string().email('Enter a valid email'),
@@ -115,39 +108,50 @@ export default function Login() {
           </form>
           <div className="mt-4 space-y-2 text-center text-sm">
             <p className="text-muted-foreground">No account? Ask your administrator to invite you.</p>
-            <Dialog open={resetOpen} onOpenChange={setResetOpen}>
-              <DialogTrigger asChild>
-                <Button variant="link" className="text-xs">
-                  Forgot password?
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Reset Password</DialogTitle>
-                  <DialogDescription>Enter your email and a new password to regain access.</DialogDescription>
-                </DialogHeader>
-                <form onSubmit={handleResetSubmit(onResetSubmit)} className="space-y-4" noValidate>
-                  <div className="space-y-1.5">
-                    <Label htmlFor="reset-email">Email</Label>
-                    <Input id="reset-email" type="email" {...registerReset('email')} />
-                    {resetErrors.email && <p className="text-xs text-destructive">{resetErrors.email.message}</p>}
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label htmlFor="new-password">New Password</Label>
-                    <Input id="new-password" type="password" {...registerReset('newPassword')} placeholder="At least 10 characters" />
-                    {resetErrors.newPassword && <p className="text-xs text-destructive">{resetErrors.newPassword.message}</p>}
-                  </div>
-                  {resetError && <p className="text-sm text-destructive">{resetError}</p>}
-                  {resetMessage && <p className="text-sm text-green-600">{resetMessage}</p>}
-                  <Button type="submit" className="w-full" disabled={isResetting}>
-                    {isResetting ? 'Resetting...' : 'Reset Password'}
-                  </Button>
-                </form>
-              </DialogContent>
-            </Dialog>
+            <Button variant="link" className="text-xs" onClick={() => setResetOpen(true)}>
+              Forgot password?
+            </Button>
           </div>
         </CardContent>
       </Card>
+
+      <Dialog open={resetOpen} onOpenChange={setResetOpen}>
+        <Card className="w-full max-w-sm">
+          <CardHeader>
+            <CardTitle>Reset Password</CardTitle>
+            <CardDescription>Enter your email and a new password to regain access.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleResetSubmit(onResetSubmit)} className="space-y-4" noValidate>
+              <div className="space-y-1.5">
+                <Label htmlFor="reset-email">Email</Label>
+                <Input id="reset-email" type="email" {...registerReset('email')} />
+                {resetErrors.email && <p className="text-xs text-destructive">{resetErrors.email.message}</p>}
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="new-password">New Password</Label>
+                <Input
+                  id="new-password"
+                  type="password"
+                  {...registerReset('newPassword')}
+                  placeholder="At least 10 characters"
+                />
+                {resetErrors.newPassword && <p className="text-xs text-destructive">{resetErrors.newPassword.message}</p>}
+              </div>
+              {resetError && <p className="text-sm text-destructive">{resetError}</p>}
+              {resetMessage && <p className="text-sm text-green-600">{resetMessage}</p>}
+              <div className="flex gap-2">
+                <Button type="submit" className="flex-1" disabled={isResetting}>
+                  {isResetting ? 'Resetting...' : 'Reset Password'}
+                </Button>
+                <Button type="button" variant="outline" onClick={() => setResetOpen(false)}>
+                  Cancel
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      </Dialog>
     </div>
   );
 }
