@@ -28,8 +28,8 @@ FROM node:22-alpine
 
 WORKDIR /app
 
-# Install dumb-init to handle signals properly (PID 1 problem)
-RUN apk add --no-cache dumb-init
+# Install dumb-init and openssl for Prisma
+RUN apk add --no-cache dumb-init openssl
 
 # Create data directory for SQLite database and backups
 RUN mkdir -p /app/data /app/logs
