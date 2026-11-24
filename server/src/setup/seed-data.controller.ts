@@ -39,6 +39,9 @@ export class SeedDataController {
         };
       }
 
+      // Ensure reference data exists (industries, stages, etc.)
+      await this.ensureReferenceData();
+
       // Create companies
       const acme = await this.prisma.company.create({
         data: {
@@ -369,6 +372,89 @@ export class SeedDataController {
         success: false,
         error: error instanceof Error ? error.message : String(error),
       };
+    }
+  }
+
+  private async ensureReferenceData() {
+    // Create industries if they don't exist
+    const industries = [
+      { id: 'ind-technology', name: 'Technology', colour: 'info', sortOrder: 0 },
+      { id: 'ind-saas', name: 'SaaS', colour: 'default', sortOrder: 1 },
+      { id: 'ind-manufacturing', name: 'Manufacturing', colour: 'secondary', sortOrder: 2 },
+      { id: 'ind-finance', name: 'Finance', colour: 'warning', sortOrder: 3 },
+      { id: 'ind-energy', name: 'Energy', colour: 'success', sortOrder: 4 },
+    ];
+
+    for (const ind of industries) {
+      await this.prisma.industry.upsert({
+        where: { id: ind.id },
+        update: {},
+        create: ind,
+      });
+    }
+
+    // Create deal stages if they don't exist
+    const stages = [
+      { id: 'stage-lead', name: 'Lead', colour: 'secondary', sortOrder: 0, isDefault: true, outcome: 'OPEN', winChance: 10 },
+      { id: 'stage-qualified', name: 'Qualified', colour: 'info', sortOrder: 1, outcome: 'OPEN', winChance: 25 },
+      { id: 'stage-proposal', name: 'Proposal', colour: 'warning', sortOrder: 2, outcome: 'OPEN', winChance: 50 },
+      { id: 'stage-negotiation', name: 'Negotiation', colour: 'warning', sortOrder: 3, outcome: 'OPEN', winChance: 75 },
+      { id: 'stage-won', name: 'Won', colour: 'success', sortOrder: 4, outcome: 'WON', winChance: 100 },
+      { id: 'stage-lost', name: 'Lost', colour: 'destructive', sortOrder: 5, outcome: 'LOST', winChance: 0 },
+    ];
+
+    for (const stage of stages) {
+      await this.prisma.dealStage.upsert({
+        where: { id: stage.id },
+        update: {},
+        create: stage,
+      });
+    }
+
+    // Create contact types if they don't exist
+    const contactTypes = [
+      { id: 'type-email', name: 'Email', colour: 'info', sortOrder: 0, icon: 'mail' },
+      { id: 'type-call', name: 'Call', colour: 'success', sortOrder: 1, isDefault: true, icon: 'phone' },
+      { id: 'type-meeting', name: 'Meeting', colour: 'default', sortOrder: 2, icon: 'users' },
+      { id: 'type-note', name: 'Note', colour: 'warning', sortOrder: 3, icon: 'file-text' },
+    ];
+
+    for (const type of contactTypes) {
+      await this.prisma.contactType.upsert({
+        where: { id: type.id },
+        update: {},
+        create: type,
+      });
+    }
+
+    // Create task statuses if they don't exist
+    const statuses = [
+      { id: 'status-todo', name: 'To Do', colour: 'secondary', sortOrder: 0, isDefault: true, isDone: false },
+      { id: 'status-in-progress', name: 'In Progress', colour: 'warning', sortOrder: 1, isDone: false },
+      { id: 'status-done', name: 'Done', colour: 'success', sortOrder: 2, isDone: true },
+    ];
+
+    for (const status of statuses) {
+      await this.prisma.taskStatus.upsert({
+        where: { id: status.id },
+        update: {},
+        create: status,
+      });
+    }
+
+    // Create task priorities if they don't exist
+    const priorities = [
+      { id: 'priority-low', name: 'Low', colour: 'secondary', sortOrder: 0 },
+      { id: 'priority-medium', name: 'Medium', colour: 'info', sortOrder: 1, isDefault: true },
+      { id: 'priority-high', name: 'High', colour: 'destructive', sortOrder: 2 },
+    ];
+
+    for (const priority of priorities) {
+      await this.prisma.taskPriority.upsert({
+        where: { id: priority.id },
+        update: {},
+        create: priority,
+      });
     }
   }
 }
