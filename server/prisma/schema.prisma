@@ -1,0 +1,292 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Note: SQLite does not support Prisma enums, so enum-like fields are stored as
+// strings and validated at the application level via class-validator (@IsIn).
+// This file is managed by the in-app schema editor; manual formatting may be
+// rewritten on the next edit.
+
+model User {
+  id String @id @default(uuid())
+  email String @unique
+  passwordHash String
+  firstName String
+  lastName String
+  roleProfileId String @map("role_profile_id")
+  roleProfile RoleProfile @relation("RoleProfileToUser", fields: [roleProfileId], references: [id], onDelete: Restrict)
+  mustChangePassword Boolean @default(false) @map("must_change_password")
+  passwordChangedAt DateTime? @map("password_changed_at")
+  themePrefs String? @map("theme_prefs")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  people Person[] @relation("PersonToUser")
+  deals Deal[] @relation("DealToUser")
+  stageChanges DealStageChange[] @relation("StageChangeUser")
+  tasks Task[] @relation("TaskAssignee")
+  contacts Contact[] @relation("ContactToUser")
+
+  @@map("users")
+}
+
+model Company {
+  id String @id @default(uuid())
+  name String
+  website String?
+  phone String?
+  email String?
+  address String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  people Person[] @relation("CompanyToPerson")
+  deals Deal[] @relation("CompanyToDeal")
+  industries CompanyIndustry[] @relation("CompanyToCompanyIndustry")
+
+  @@map("companies")
+}
+
+model Person {
+  id String @id @default(uuid())
+  firstName String
+  lastName String
+  email String?
+  phone String?
+  title String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  companyId String? @map("company_id")
+  ownerId String? @map("owner_id")
+  company Company? @relation("CompanyToPerson", fields: [companyId], references: [id], onDelete: SetNull)
+  owner User? @relation("PersonToUser", fields: [ownerId], references: [id], onDelete: SetNull)
+  contacts Contact[] @relation("ContactToPerson")
+  tasks Task[] @relation("PersonToTask")
+  deals Deal[] @relation("PersonToDeal")
+
+  @@map("people")
+}
+
+model Deal {
+  id String @id @default(uuid())
+  title String
+  amount Float @default(0)
+  stageId String @map("stage_id")
+  expectedCloseDate DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  companyId String? @map("company_id")
+  personId String? @map("person_id")
+  ownerId String? @map("owner_id")
+  stage DealStage @relation("DealToDealStage", fields: [stageId], references: [id], onDelete: Restrict)
+  company Company? @relation("CompanyToDeal", fields: [companyId], references: [id], onDelete: SetNull)
+  person Person? @relation("PersonToDeal", fields: [personId], references: [id], onDelete: SetNull)
+  owner User? @relation("DealToUser", fields: [ownerId], references: [id], onDelete: SetNull)
+  contacts Contact[] @relation("ContactToDeal")
+  tasks Task[] @relation("DealToTask")
+  stageChanges DealStageChange[] @relation("StageChangeDeal")
+
+  @@map("deals")
+}
+
+model Contact {
+  id String @id @default(uuid())
+  typeId String @map("type_id")
+  subject String
+  description String?
+  createdAt DateTime @default(now())
+  personId String? @map("person_id")
+  dealId String? @map("deal_id")
+  userId String? @map("user_id")
+  tasks Task[] @relation("ContactToTask")
+  type ContactType @relation("ContactToContactType", fields: [typeId], references: [id], onDelete: Restrict)
+  person Person? @relation("ContactToPerson", fields: [personId], references: [id], onDelete: SetNull)
+  deal Deal? @relation("ContactToDeal", fields: [dealId], references: [id], onDelete: SetNull)
+  user User? @relation("ContactToUser", fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("contacts")
+}
+
+model Task {
+  id String @id @default(uuid())
+  title String
+  description String?
+  dueDate DateTime?
+  statusId String @map("status_id")
+  priorityId String @map("priority_id")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  personId String? @map("person_id")
+  dealId String? @map("deal_id")
+  assigneeId String? @map("assignee_id")
+  contactId String? @map("contact_id")
+  status TaskStatus @relation("TaskToTaskStatus", fields: [statusId], references: [id], onDelete: Restrict)
+  priority TaskPriority @relation("TaskToTaskPriority", fields: [priorityId], references: [id], onDelete: Restrict)
+  person Person? @relation("PersonToTask", fields: [personId], references: [id], onDelete: SetNull)
+  deal Deal? @relation("DealToTask", fields: [dealId], references: [id], onDelete: SetNull)
+  assignee User? @relation("TaskAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  contact Contact? @relation("ContactToTask", fields: [contactId], references: [id], onDelete: SetNull)
+
+  @@index([contactId])
+  @@map("tasks")
+}
+
+model AppSetting {
+  key String @id
+  value String
+  updatedAt DateTime @updatedAt
+
+  @@map("app_settings")
+}
+
+model RoleProfile {
+  id String @id @default(uuid())
+  name String @unique
+  description String?
+  permissions String @default("[]")
+  isSystem Boolean @default(false) @map("is_system")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  users User[] @relation("RoleProfileToUser")
+
+  @@map("role_profiles")
+}
+
+model Industry {
+  id String @id @default(uuid())
+  name String
+  colour String @default("secondary")
+  sortOrder Int @default(0) @map("sort_order")
+  isActive Boolean @default(true) @map("is_active")
+  companies CompanyIndustry[] @relation("IndustryToCompanyIndustry")
+
+  @@map("industries")
+}
+
+model CompanyIndustry {
+  companyId String @map("company_id")
+  industryId String @map("industry_id")
+  company Company @relation("CompanyToCompanyIndustry", fields: [companyId], references: [id], onDelete: Cascade)
+  industry Industry @relation("IndustryToCompanyIndustry", fields: [industryId], references: [id], onDelete: Restrict)
+
+  @@id([companyId, industryId])
+  @@map("company_industries")
+}
+
+model DealStage {
+  id String @id @default(uuid())
+  name String
+  colour String @default("secondary")
+  sortOrder Int @default(0) @map("sort_order")
+  isActive Boolean @default(true) @map("is_active")
+  isDefault Boolean @default(false) @map("is_default")
+  outcome String @default("OPEN")
+  winChance Int @default(0) @map("win_chance")
+  deals Deal[] @relation("DealToDealStage")
+  changesFrom DealStageChange[] @relation("StageChangeFrom")
+  changesTo DealStageChange[] @relation("StageChangeTo")
+
+  @@map("deal_stages")
+}
+
+// One row each time a deal moves to another stage: why, who, and when. The
+// database refuses a stage move without a matching row (see reference-data/guards.ts)
+// and refuses to edit or delete a row, so this is a trustworthy record.
+model DealStageChange {
+  id String @id @default(uuid())
+  dealId String @map("deal_id")
+  fromStageId String @map("from_stage_id")
+  toStageId String @map("to_stage_id")
+  userId String? @map("user_id")
+  // The name at the time, so history still reads correctly if the user is later removed.
+  userName String @map("user_name")
+  comment String
+  // Set by the database once the move this row authorised has happened (each row allows one move).
+  applied Boolean @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  deal Deal @relation("StageChangeDeal", fields: [dealId], references: [id], onDelete: Cascade)
+  fromStage DealStage @relation("StageChangeFrom", fields: [fromStageId], references: [id], onDelete: Restrict)
+  toStage DealStage @relation("StageChangeTo", fields: [toStageId], references: [id], onDelete: Restrict)
+  user User? @relation("StageChangeUser", fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([dealId, createdAt])
+  @@map("deal_stage_changes")
+}
+
+model ContactType {
+  id String @id @default(uuid())
+  name String
+  colour String @default("secondary")
+  sortOrder Int @default(0) @map("sort_order")
+  isActive Boolean @default(true) @map("is_active")
+  isDefault Boolean @default(false) @map("is_default")
+  icon String @default("file-text")
+  contacts Contact[] @relation("ContactToContactType")
+
+  @@map("contact_types")
+}
+
+model TaskStatus {
+  id String @id @default(uuid())
+  name String
+  colour String @default("secondary")
+  sortOrder Int @default(0) @map("sort_order")
+  isActive Boolean @default(true) @map("is_active")
+  isDefault Boolean @default(false) @map("is_default")
+  isDone Boolean @default(false) @map("is_done")
+  tasks Task[] @relation("TaskToTaskStatus")
+
+  @@map("task_statuses")
+}
+
+model TaskPriority {
+  id String @id @default(uuid())
+  name String
+  colour String @default("secondary")
+  sortOrder Int @default(0) @map("sort_order")
+  isActive Boolean @default(true) @map("is_active")
+  isDefault Boolean @default(false) @map("is_default")
+  tasks Task[] @relation("TaskToTaskPriority")
+
+  @@map("task_priorities")
+}
+
+model ReferenceFieldSetting {
+  fieldKey String @id @map("field_key")
+  allowMultiple Boolean @default(false) @map("allow_multiple")
+
+  @@map("reference_field_settings")
+}
+
+// Append-only history of every change. Rows are written by database triggers
+// (see src/audit/audit-triggers.ts), never edited and never deleted.
+model AuditLog {
+  id Int @id @default(autoincrement())
+  at String
+  actorId String? @map("actor_id")
+  actorName String? @map("actor_name")
+  action String
+  entity String
+  recordId String? @map("record_id")
+  field String?
+  oldValue String? @map("old_value")
+  newValue String? @map("new_value")
+
+  @@index([entity, recordId])
+  @@index([at])
+  @@map("audit_log")
+}
+
+// One row saying who is making the change in progress, so the triggers can name them.
+model AuditActor {
+  id Int @id
+  actorId String? @map("actor_id")
+  actorName String? @map("actor_name")
+  setAt String @map("set_at")
+
+  @@map("audit_actor")
+}

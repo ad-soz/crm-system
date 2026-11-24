@@ -1,0 +1,29 @@
+{
+  "taken": "2026-11-09T21:33:09.900Z",
+  "counts": {
+    "users": 2,
+    "companies": 4,
+    "contacts": 6,
+    "activities": 4,
+    "tasks": 4,
+    "deals": 4,
+    "stageChanges": 1,
+    "activityTypes": 4
+  },
+  "fingerprints": {
+    "contacts": "47090520ab7e8cac",
+    "activities": "b89c53cbdacac4d4",
+    "tasks": "ecfbc572a13c26fa",
+    "deals": "d52e92a2c5bfab49"
+  },
+  "profilePermissions": {
+    "administrator": "[\"contacts.view\",\"contacts.create\",\"contacts.edit\",\"contacts.delete\",\"companies.view\",\"companies.create\",\"companies.edit\",\"companies.delete\",\"deals.view\",\"deals.create\",\"deals.edit\",\"deals.delete\",\"activities.view\",\"activities.create\",\"activities.edit\",\"activities.delete\",\"tasks.view\",\"tasks.create\",\"tasks.edit\",\"tasks.delete\",\"users.manage\",\"profiles.manage\",\"appearance.manage\",\"data.import\",\"data.export\",\"datamodel.view\",\"datamodel.edit\"]",
+    "sales-rep": "[\"contacts.view\",\"contacts.create\",\"contacts.edit\",\"contacts.delete\",\"companies.view\",\"companies.create\",\"companies.edit\",\"companies.delete\",\"deals.view\",\"deals.create\",\"deals.edit\",\"deals.delete\",\"activities.view\",\"activities.create\",\"activities.edit\",\"activities.delete\",\"tasks.view\",\"tasks.create\",\"tasks.edit\",\"tasks.delete\",\"data.import\",\"data.export\",\"datamodel.view\"]"
+  },
+  "typeIds": [
+    "type-call",
+    "type-email",
+    "type-meeting",
+    "type-note"
+  ]
+}

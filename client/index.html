@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CRM System</title>
+    <script>
+      // Apply the last-used theme before the app boots, so there is no flash of
+      // the default theme. The app re-applies the current theme once it loads.
+      try {
+        var cache = JSON.parse(localStorage.getItem('crm_theme_cache') || 'null');
+        if (cache && cache.vars) {
+          var root = document.documentElement;
+          for (var name in cache.vars) root.style.setProperty(name, cache.vars[name]);
+          if (cache.dark) root.classList.add('dark');
+          root.style.colorScheme = cache.dark ? 'dark' : 'light';
+          if (cache.fontSize) root.style.fontSize = cache.fontSize;
+        }
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

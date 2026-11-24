@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Theme tokens. These are fallbacks only: the theme engine (src/lib/theme.ts)
+ * sets every variable on <html> at runtime from the user's appearance settings.
+ */
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --success: 142 72% 29%;
+    --success-foreground: 0 0% 100%;
+    --warning: 28 92% 36%;
+    --warning-foreground: 0 0% 100%;
+    --info: 221 83% 45%;
+    --info-foreground: 0 0% 100%;
+    --radius: 0.5rem;
+    --glow: 0 0 #0000;
+    --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+      sans-serif;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 60% 7%;
+    --card-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 72% 60%;
+    --destructive-foreground: 222.2 47.4% 11.2%;
+    --border: 217.2 32.6% 22%;
+    --input: 217.2 32.6% 22%;
+    --ring: 210 40% 98%;
+    --success: 142 69% 58%;
+    --success-foreground: 222.2 47.4% 11.2%;
+    --warning: 38 92% 60%;
+    --warning-foreground: 222.2 47.4% 11.2%;
+    --info: 213 94% 68%;
+    --info-foreground: 222.2 47.4% 11.2%;
+  }
+
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: var(--font-sans);
+  }
+}
+
+/*
+ * Glow (Settings > Appearance). Adds the accent-colour halo from --glow on top
+ * of whatever shadow and focus ring an element already has. This sits after
+ * the Tailwind layers on purpose: box-shadow is one property, so the rule has
+ * to repeat the ring and shadow values (Tailwind sets them as variables) and
+ * must also win while the element is focused, or the halo would vanish then.
+ */
+.glow,
+.glow:focus-visible {
+  box-shadow:
+    var(--tw-ring-offset-shadow, 0 0 #0000),
+    var(--tw-ring-shadow, 0 0 #0000),
+    var(--tw-shadow, 0 0 #0000),
+    var(--glow, 0 0 #0000);
+}
