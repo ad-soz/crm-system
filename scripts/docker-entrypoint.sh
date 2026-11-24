@@ -39,6 +39,17 @@ npx prisma migrate deploy
 echo "[CRM] Generating Prisma client..."
 npx prisma generate
 
+# Seed database on first deploy (only if no users exist)
+echo "[CRM] Checking if database needs seeding..."
+USER_COUNT=$(npx prisma db execute --stdin 2>/dev/null <<'SQL' | tail -1 || echo "error")
+SELECT COUNT(*) as count FROM "User";
+SQL
+
+if [ "$USER_COUNT" = "error" ] || [ "$USER_COUNT" = "0" ]; then
+  echo "[CRM] Seeding database with sample data and default admin..."
+  npx prisma db seed || echo "[CRM] Warning: Seed failed, but continuing..."
+fi
+
 # Start the app
 echo "[CRM] Starting application..."
 exec node "$SERVER_DIR/dist/main.js"

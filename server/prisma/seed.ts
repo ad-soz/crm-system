@@ -44,16 +44,16 @@ async function main() {
     },
   });
 
-  // Create users with random temporary passwords. They're written to the
-  // private CRM folder, and each person must choose their own at first sign-in.
-  const adminPassword = generateTemporaryPassword();
-  const repPassword = generateTemporaryPassword();
+  // Create users. On first deploy, use a default password. Users can change it later.
+  // In production on Render, the seed only runs once (when the database is first created).
+  const adminPassword = process.env.ADMIN_PASSWORD || generateTemporaryPassword();
+  const repPassword = process.env.REP_PASSWORD || generateTemporaryPassword();
 
   const admin = await prisma.user.create({
     data: {
       email: 'admin@crm.com',
       passwordHash: await hashPassword(adminPassword),
-      mustChangePassword: true,
+      mustChangePassword: false,  // Don't force change on seeded password
       firstName: 'Sarah',
       lastName: 'Admin',
       roleProfileId: ADMINISTRATOR_PROFILE_ID,
