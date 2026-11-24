@@ -82,6 +82,22 @@ export default function Login() {
     }
   };
 
+  const onCreateUsers = async () => {
+    try {
+      const response = await fetch('/api/setup/create-users', { method: 'POST' });
+      const data = await response.json();
+      if (data.success) {
+        setServerError(
+          `✓ Users created! Sign in with admin@crm.com / ${data.admin.password} or rep@crm.com / ${data.rep.password}`
+        );
+      } else {
+        setServerError(data.message || 'Could not create users');
+      }
+    } catch (err) {
+      setServerError(getApiErrorMessage(err));
+    }
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted/30 p-4">
       <Card className="w-full max-w-sm">
@@ -108,9 +124,14 @@ export default function Login() {
           </form>
           <div className="mt-4 space-y-2 text-center text-sm">
             <p className="text-muted-foreground">No account? Ask your administrator to invite you.</p>
-            <Button variant="link" className="text-xs" onClick={() => setResetOpen(true)}>
-              Forgot password?
-            </Button>
+            <div className="flex gap-2 justify-center">
+              <Button variant="link" className="text-xs" onClick={() => setResetOpen(true)}>
+                Forgot password?
+              </Button>
+              <Button variant="link" className="text-xs" onClick={onCreateUsers}>
+                Create demo users
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
