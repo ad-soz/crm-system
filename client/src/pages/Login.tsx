@@ -82,22 +82,6 @@ export default function Login() {
     }
   };
 
-  const onCreateUsers = async () => {
-    try {
-      const response = await fetch('/api/setup/create-users', { method: 'POST' });
-      const data = await response.json();
-      if (data.success) {
-        setServerError(
-          `✓ Users created! Sign in with admin@crm.com / ${data.admin.password} or rep@crm.com / ${data.rep.password}`
-        );
-      } else {
-        setServerError(data.message || 'Could not create users');
-      }
-    } catch (err) {
-      setServerError(getApiErrorMessage(err));
-    }
-  };
-
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted/30 p-4">
       <Card className="w-full max-w-sm">
