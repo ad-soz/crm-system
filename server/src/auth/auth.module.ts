@@ -4,12 +4,15 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
+import { PasswordResetController } from './password-reset.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { requireJwtSecret } from './jwt-secret';
+import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
   imports: [
     PassportModule,
+    PrismaModule,
     // Read the secret through ConfigService at startup, after the env files
     // are loaded. (Reading process.env at import time depended on load order.)
     JwtModule.registerAsync({
@@ -20,7 +23,7 @@ import { requireJwtSecret } from './jwt-secret';
       }),
     }),
   ],
-  controllers: [AuthController],
+  controllers: [AuthController, PasswordResetController],
   providers: [AuthService, JwtStrategy],
   exports: [AuthService],
 })
