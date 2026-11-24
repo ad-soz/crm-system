@@ -17,11 +17,11 @@ COPY server/prisma ./server/prisma
 # Install dependencies
 RUN npm ci
 
+# Generate Prisma client BEFORE build (TypeScript needs the types)
+RUN npm run prisma -- generate -w server
+
 # Build both server and client
 RUN npm run build
-
-# Generate Prisma client (needed at runtime)
-RUN npm run prisma -- generate -w server
 
 # Stage 2: Runtime
 FROM node:22-alpine
