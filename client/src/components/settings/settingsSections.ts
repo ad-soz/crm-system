@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import { Database, DatabaseBackup, History, ListChecks, Palette, ShieldCheck, User, Users } from 'lucide-react';
+import { Database, DatabaseBackup, History, ListChecks, Palette, ShieldCheck, User, Users, Download } from 'lucide-react';
 
 /**
  * Every page under Settings, in one place. The menu is built from this, so
@@ -27,6 +27,7 @@ export const SETTINGS_SECTIONS: SettingsSection[] = [
   { path: 'backups', label: 'Backups', description: 'Saved copies of your data', icon: DatabaseBackup, group: 'Organisation', permission: 'backups.manage' },
   { path: 'audit', label: 'Audit log', description: 'Who changed what, and when', icon: History, group: 'Organisation', permission: 'audit.view' },
   { path: 'data-model', label: 'Data model', description: 'The structure of the database', icon: Database, group: 'Advanced', permission: 'datamodel.view' },
+  { path: 'test-data', label: 'Test data', description: 'Populate database with sample data', icon: Download, group: 'Advanced', permission: 'users.manage' },
 ];
 
 /** The sections a person may see, grouped, with empty groups left out. */
