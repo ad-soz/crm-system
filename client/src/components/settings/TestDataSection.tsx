@@ -50,7 +50,7 @@ export function TestDataSection() {
         </CardHeader>
         <CardContent className="space-y-4">
           {message && (
-            <Notice type={message.type === 'success' ? 'info' : 'error'}>
+            <Notice tone={message.type === 'success' ? 'success' : 'error'}>
               {message.text}
             </Notice>
           )}
