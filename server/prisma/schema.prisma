@@ -63,11 +63,25 @@ model Person {
   ownerId String? @map("owner_id")
   company Company? @relation("CompanyToPerson", fields: [companyId], references: [id], onDelete: SetNull)
   owner User? @relation("PersonToUser", fields: [ownerId], references: [id], onDelete: SetNull)
+  personContacts PersonContact[] @relation("PersonToPersonContact")
   contacts Contact[] @relation("ContactToPerson")
   tasks Task[] @relation("PersonToTask")
   deals Deal[] @relation("PersonToDeal")
 
   @@map("people")
+}
+
+model PersonContact {
+  id String @id @default(uuid())
+  personId String @map("person_id")
+  type String @default("work")
+  value String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  person Person @relation("PersonToPersonContact", fields: [personId], references: [id], onDelete: Cascade)
+
+  @@index([personId])
+  @@map("person_contacts")
 }
 
 model Deal {
