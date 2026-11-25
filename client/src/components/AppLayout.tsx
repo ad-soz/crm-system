@@ -63,7 +63,7 @@ export function AppLayout() {
       {/* Mobile menu overlay */}
       {mobileMenuOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/50 md:hidden"
+          className="fixed inset-0 z-40 bg-black/30 md:hidden"
           onClick={() => setMobileMenuOpen(false)}
         />
       )}
@@ -71,7 +71,7 @@ export function AppLayout() {
       {/* Mobile sidebar */}
       <aside
         className={cn(
-          'fixed left-0 top-0 z-50 h-screen w-60 flex-col border-r bg-muted/20 transition-transform md:hidden',
+          'fixed left-0 top-0 z-50 h-screen w-60 flex-col border-r bg-background transition-transform md:hidden',
           mobileMenuOpen ? 'flex translate-x-0' : '-translate-x-full',
         )}
       >
