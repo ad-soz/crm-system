@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { LogOut } from 'lucide-react';
 import { api, getApiErrorMessage } from '@/lib/api';
 import { useMutation } from '@/hooks/queries';
 import { useAuth } from '@/context/AuthContext';
@@ -22,7 +23,7 @@ type ProfileValues = z.infer<typeof profileSchema>;
 
 /** Settings > My details: your name and email, your role profile, and a way to change your password. */
 export function MyDetailsSection() {
-  const { user, updateUser } = useAuth();
+  const { user, updateUser, logout } = useAuth();
   const { can } = usePermissions();
   const { toast } = useToast();
 
@@ -88,6 +89,15 @@ export function MyDetailsSection() {
             <Link to="/account" className="text-sm text-muted-foreground underline hover:text-foreground">
               Change my password
             </Link>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={logout}
+              className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              Log out
+            </Button>
           </div>
         </form>
       </CardContent>

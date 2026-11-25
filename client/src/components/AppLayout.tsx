@@ -9,7 +9,6 @@ import {
   Contact,
   BarChart3,
   Settings,
-  LogOut,
   Menu,
   X,
 } from 'lucide-react';
@@ -31,7 +30,7 @@ const navItems = [
 ];
 
 export function AppLayout() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const { can } = usePermissions();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const visibleItems = navItems.filter((item) => !item.permission || can(item.permission));
@@ -120,18 +119,13 @@ export function AppLayout() {
           <div className="flex-1">
             <GlobalSearch />
           </div>
-          <div className="flex items-center gap-3">
-            <Link
-              to="/account"
-              className="rounded-sm text-sm text-muted-foreground hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              title="Account and password"
-            >
-              {user?.firstName} {user?.lastName}
-            </Link>
-            <Button variant="ghost" size="icon" onClick={logout} aria-label="Log out">
-              <LogOut className="h-4 w-4" />
-            </Button>
-          </div>
+          <Link
+            to="/account"
+            className="rounded-sm text-sm text-muted-foreground hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            title="Account and password"
+          >
+            {user?.firstName} {user?.lastName}
+          </Link>
         </header>
         <main className="flex-1 overflow-y-auto p-4 md:p-6">
           <Outlet />
