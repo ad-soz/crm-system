@@ -1,4 +1,4 @@
-import { Link, NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet } from 'react-router-dom';
 import { useState } from 'react';
 import {
   LayoutDashboard,
@@ -12,7 +12,6 @@ import {
   Menu,
   X,
 } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
 import { usePermissions } from '@/hooks/usePermissions';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -30,7 +29,6 @@ const navItems = [
 ];
 
 export function AppLayout() {
-  const { user } = useAuth();
   const { can } = usePermissions();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const visibleItems = navItems.filter((item) => !item.permission || can(item.permission));
@@ -119,13 +117,6 @@ export function AppLayout() {
           <div className="flex-1">
             <GlobalSearch />
           </div>
-          <Link
-            to="/account"
-            className="rounded-sm text-sm text-muted-foreground hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            title="Account and password"
-          >
-            {user?.firstName} {user?.lastName}
-          </Link>
         </header>
         <main className="flex-1 overflow-y-auto p-4 md:p-6">
           <Outlet />
